@@ -23,9 +23,13 @@ export function Subscribe() {
       <Wrapper>
         <h1>{t(translations.subscribe.title)}</h1>
         <Form>
-          <FormLabel htmlFor="email">{t(translations.subscribe.form.email)}</FormLabel>
+          <FormLabel htmlFor="email">
+            {t(translations.subscribe.form.email)}
+          </FormLabel>
           <Input type="text" name="email" />
-          <FormLabel htmlFor="postalCode">{t(translations.subscribe.form.postalCode)}</FormLabel>
+          <FormLabel htmlFor="postalCode">
+            {t(translations.subscribe.form.postalCode)}
+          </FormLabel>
           <Input type="text" name="postalCode" />
           <Button>{t(translations.subscribe.form.submit)}</Button>
         </Form>

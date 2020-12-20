@@ -31,7 +31,11 @@ export function App() {
       </Helmet>
       <Switch>
         <Route exact path={process.env.PUBLIC_URL + '/'} component={HomePage} />
-        <Route exact path={process.env.PUBLIC_URL + '/subscribe'} component={Subscribe} />
+        <Route
+          exact
+          path={process.env.PUBLIC_URL + '/subscribe'}
+          component={Subscribe}
+        />
         <Route component={NotFoundPage} />
       </Switch>
       <GlobalStyle />
