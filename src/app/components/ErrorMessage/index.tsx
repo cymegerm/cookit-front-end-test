@@ -9,5 +9,5 @@ export const ErrorMessage = (message: string) => {
   );
 };
 
-const Wrapper = styled.div;
-const Message = styled.p;
+const Wrapper = styled.div``;
+const Message = styled.p``;
