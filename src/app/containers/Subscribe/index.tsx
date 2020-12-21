@@ -10,13 +10,14 @@ import { translations } from 'locales/translations';
 import { FormLabel } from 'app/components/FormLabel';
 import { Input } from 'app/components/Input';
 import { Button } from 'app/components/Button';
+import { SubscribeForm } from './subscribe-form.model';
 import { isValidEmail, isValidPostalCode } from 'utils/validation';
-import { isDeliverable } from './isDeliverable';
+import { isDeliverable } from './deliverability-validation';
 
 export function Subscribe() {
   const { t } = useTranslation();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SubscribeForm>({
     isFormValid: false,
     isEmailValid: false,
     isPostalCodeValid: false,
