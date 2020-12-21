@@ -83,6 +83,7 @@ export function Subscribe() {
           <Input
             type="text"
             name="postalCode"
+            maxLength={6}
             value={formData.postalCode}
             onChange={handlePostalCodeChange}
             onBlur={handlePostalCodeChange}
