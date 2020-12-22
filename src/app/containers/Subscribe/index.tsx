@@ -10,6 +10,7 @@ import { translations } from 'locales/translations';
 import { FormLabel } from 'app/components/FormLabel';
 import { Input } from 'app/components/Input';
 import { Button } from 'app/components/Button';
+import { LoadingIndicator } from 'app/components/LoadingIndicator';
 import { SubscribeForm } from './subscribe-form.model';
 import { isValidEmail, isValidPostalCode } from 'utils/validation';
 import { isDeliverable } from './deliverability-validation';
@@ -25,6 +26,7 @@ export function Subscribe() {
     isPostalCodeDeliverable: false,
     email: '',
     postalCode: '',
+    isLoading: false,
     hasApiError: false,
     apiErrorMessage: '',
   });
@@ -58,10 +60,13 @@ export function Subscribe() {
     setFormData({ ...formData, postalCode });
 
     if (event.type === 'blur' && formData.isPostalCodeValid) {
+      setFormData({ ...formData, isLoading: true });
+
       isDeliverable(formData.postalCode).then(
         (response: PostalCodeValidation) => {
           if (response.is_deliverable) {
             formData.isPostalCodeDeliverable = true;
+            setFormData({ ...formData, isLoading: false });
           }
 
           if (formData.isEmailValid && formData.isPostalCodeValid) {
@@ -105,9 +110,10 @@ export function Subscribe() {
             onChange={handlePostalCodeChange}
             onBlur={handlePostalCodeChange}
           />
-          <Button disabled={!formData.isFormValid}>
-            {t(translations.subscribe.form.submit)}
-          </Button>
+          <SubmitButton disabled={!formData.isFormValid}>
+            {!formData.isLoading ? t(translations.subscribe.form.submit) : null}
+            {formData.isLoading ? <LoadingIndicator /> : null}
+          </SubmitButton>
         </Form>
       </Wrapper>
     </>
@@ -130,4 +136,8 @@ const Form = styled.div`
   justify-content: center;
   flex-direction: column;
   min-height: 320px;
+`;
+
+const SubmitButton = styled(Button)`
+  width: 4.2rem;
 `;

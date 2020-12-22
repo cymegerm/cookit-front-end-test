@@ -5,6 +5,7 @@ export interface SubscribeForm {
   isPostalCodeDeliverable: boolean;
   email: string;
   postalCode: string;
+  isLoading: boolean;
   hasApiError: boolean;
   apiErrorMessage: string;
 }
