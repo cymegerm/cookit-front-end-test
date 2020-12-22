@@ -1,19 +1,15 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
 import { api_base_url } from './api-base-url';
+import { headers } from './headers';
 
 export async function validatePostalCode(req: Request, res: Response) {
-  let response: any;
-  
   try {
-    response = await axios.post(`${api_base_url}/interview-is-zip-valid`,
-      { body: req.body },
-      { headers: req.headers }
-      );
+    const response: any = await axios.get(`${api_base_url}/zipTest?zip=${req.query.zip}`, { headers });
     
-    const validationResults: any[] = response.data.results;
+    const validationResults: any = response.data;
     
-    res.status(200).json({ payload: validationResults });
+    res.status(200).json(validationResults);
   }
   catch (error) {
     console.error(error);

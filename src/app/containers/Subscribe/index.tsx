@@ -13,6 +13,7 @@ import { Button } from 'app/components/Button';
 import { SubscribeForm } from './subscribe-form.model';
 import { isValidEmail, isValidPostalCode } from 'utils/validation';
 import { isDeliverable } from './deliverability-validation';
+import { PostalCodeValidation } from './postal-code-validation.model';
 
 export function Subscribe() {
   const { t } = useTranslation();
@@ -46,16 +47,19 @@ export function Subscribe() {
     setFormData({ ...formData, postalCode: value });
 
     if (event.type === 'blur' && formData.isPostalCodeValid) {
-      isDeliverable(formData.postalCode).then(response => {
-        console.log(response);
-        /*return response.is_deliverable ? formData.isPostalCodeDeliverable = true : null;*/
-        formData.isPostalCodeDeliverable = true;
-        formData.isFormValid = true;
+      isDeliverable(formData.postalCode).then(
+        (response: PostalCodeValidation) => {
+          if (response.is_deliverable) {
+            formData.isPostalCodeDeliverable = true;
+          }
 
-        /*formData.isEmailValid && formData.isPostalCodeValid ? formData.isFormValid = true : null;*/
+          if (formData.isEmailValid && formData.isPostalCodeValid) {
+            formData.isFormValid = true;
+          }
 
-        return console.log(formData);
-      });
+          return console.log('formData: ' + JSON.stringify(formData));
+        },
+      );
     }
   };
 
