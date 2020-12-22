@@ -7,17 +7,19 @@ import { StyleConstants } from 'styles/StyleConstants';
 import { useTranslation } from 'react-i18next';
 import { translations } from 'locales/translations';
 
+import { useNavigation } from 'app/controllers/navigation';
 import { FormLabel } from 'app/components/FormLabel';
 import { Input } from 'app/components/Input';
 import { Button } from 'app/components/Button';
 import { LoadingIndicator } from 'app/components/LoadingIndicator';
 import { SubscribeForm } from './subscribe-form.model';
+import { PostalCodeValidation } from './postal-code-validation.model';
 import { isValidEmail, isValidPostalCode } from 'utils/validation';
 import { isDeliverable } from './deliverability-validation';
-import { PostalCodeValidation } from './postal-code-validation.model';
 
 export function Subscribe() {
   const { t } = useTranslation();
+  const { navigateTo } = useNavigation();
 
   const [formData, setFormData] = useState<SubscribeForm>({
     isFormValid: false,
@@ -94,10 +96,16 @@ export function Subscribe() {
           }
 
           return setFormData({ ...formData });
-          /*console.log('formData: ' + JSON.stringify(formData));*/
         },
       );
     }
+  };
+
+  const handleSubmit = () => {
+    // Send form data to backend, wait for response, handle potential errors.
+    // On success confirmation from the backend, redirect to confirmation route.
+    // Here, we presume a success response from the backend.
+    return navigateTo('subscribe/confirmation');
   };
 
   return (
@@ -143,7 +151,7 @@ export function Subscribe() {
               {formData.undeliverablePostalCodeMessage}
             </Message>
           ) : null}
-          <SubmitButton disabled={!formData.isFormValid}>
+          <SubmitButton disabled={!formData.isFormValid} onClick={handleSubmit}>
             {!formData.isLoading ? t(translations.subscribe.form.submit) : null}
             {formData.isLoading ? <LoadingIndicator /> : null}
           </SubmitButton>
@@ -188,5 +196,5 @@ const Message = styled.p`
 `;
 
 const SubmitButton = styled(Button)`
-  width: 4.2rem;
+  width: 6rem;
 `;
