@@ -25,26 +25,37 @@ export function Subscribe() {
     isPostalCodeDeliverable: false,
     email: '',
     postalCode: '',
+    hasApiError: false,
+    apiErrorMessage: '',
   });
 
   const handleEmailChange = event => {
-    const { value } = event.target;
+    const email = event.target.value;
 
-    formData.isEmailValid = isValidEmail(value);
+    formData.isFormValid = false;
+    formData.isEmailValid = isValidEmail(email);
 
-    setFormData({ ...formData, email: value });
+    if (formData.isEmailValid && formData.isPostalCodeValid) {
+      formData.isFormValid = true;
+    }
+
+    setFormData({ ...formData, email: email.toLowerCase() });
   };
 
   const handlePostalCodeChange = event => {
-    const value = event.target.value.toUpperCase();
+    const postalCode = event.target.value.toUpperCase();
 
+    formData.isFormValid = false;
     formData.isPostalCodeValid = false;
+    formData.isPostalCodeDeliverable = false;
+    setFormData({ ...formData });
 
-    if (value.length === 6) {
-      formData.isPostalCodeValid = isValidPostalCode(value);
+    if (postalCode.length === 6) {
+      formData.isPostalCodeValid = isValidPostalCode(postalCode);
+      setFormData({ ...formData });
     }
 
-    setFormData({ ...formData, postalCode: value });
+    setFormData({ ...formData, postalCode });
 
     if (event.type === 'blur' && formData.isPostalCodeValid) {
       isDeliverable(formData.postalCode).then(
@@ -57,7 +68,8 @@ export function Subscribe() {
             formData.isFormValid = true;
           }
 
-          return console.log('formData: ' + JSON.stringify(formData));
+          return setFormData({ ...formData });
+          /*console.log('formData: ' + JSON.stringify(formData));*/
         },
       );
     }
@@ -93,7 +105,7 @@ export function Subscribe() {
             onChange={handlePostalCodeChange}
             onBlur={handlePostalCodeChange}
           />
-          <Button /*disabled={true}*/>
+          <Button disabled={!formData.isFormValid}>
             {t(translations.subscribe.form.submit)}
           </Button>
         </Form>
