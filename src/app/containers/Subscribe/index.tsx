@@ -24,6 +24,9 @@ export function Subscribe() {
     isEmailValid: false,
     isPostalCodeValid: false,
     isPostalCodeDeliverable: false,
+    invalidEmailMessage: '',
+    invalidPostalCodeMessage: '',
+    undeliverablePostalCodeMessage: '',
     email: '',
     postalCode: '',
     isLoading: false,
@@ -35,7 +38,13 @@ export function Subscribe() {
     const email = event.target.value;
 
     formData.isFormValid = false;
+    formData.invalidEmailMessage = '';
     formData.isEmailValid = isValidEmail(email);
+
+    if (!formData.isEmailValid) {
+      formData.invalidEmailMessage =
+        'Please provide a correctly formatted email address.';
+    }
 
     if (formData.isEmailValid && formData.isPostalCodeValid) {
       formData.isFormValid = true;
@@ -50,11 +59,18 @@ export function Subscribe() {
     formData.isFormValid = false;
     formData.isPostalCodeValid = false;
     formData.isPostalCodeDeliverable = false;
+    formData.invalidPostalCodeMessage = '';
+    formData.undeliverablePostalCodeMessage = '';
     setFormData({ ...formData });
 
     if (postalCode.length === 6) {
       formData.isPostalCodeValid = isValidPostalCode(postalCode);
       setFormData({ ...formData });
+    }
+
+    if (!formData.isPostalCodeValid) {
+      formData.invalidPostalCodeMessage =
+        'Please provide a correctly formatted postal code.';
     }
 
     setFormData({ ...formData, postalCode });
@@ -67,6 +83,10 @@ export function Subscribe() {
           if (response.is_deliverable) {
             formData.isPostalCodeDeliverable = true;
             setFormData({ ...formData, isLoading: false });
+          } else {
+            formData.undeliverablePostalCodeMessage =
+              "Oops. We don't currently deliver to this area.";
+            return setFormData({ ...formData });
           }
 
           if (formData.isEmailValid && formData.isPostalCodeValid) {
@@ -92,6 +112,7 @@ export function Subscribe() {
         <Form>
           <FormLabel htmlFor="email">
             {t(translations.subscribe.form.email)}
+            {formData.isEmailValid ? <Check>&#10003;</Check> : null}
           </FormLabel>
           <Input
             type="text"
@@ -99,8 +120,12 @@ export function Subscribe() {
             value={formData.email}
             onChange={handleEmailChange}
           />
+          {formData.invalidEmailMessage ? (
+            <Message>{formData.invalidEmailMessage}</Message>
+          ) : null}
           <FormLabel htmlFor="postalCode">
             {t(translations.subscribe.form.postalCode)}
+            {formData.isPostalCodeDeliverable ? <Check>&#10003;</Check> : null}
           </FormLabel>
           <Input
             type="text"
@@ -110,6 +135,14 @@ export function Subscribe() {
             onChange={handlePostalCodeChange}
             onBlur={handlePostalCodeChange}
           />
+          {formData.invalidPostalCodeMessage ? (
+            <Message>{formData.invalidPostalCodeMessage}</Message>
+          ) : null}
+          {formData.undeliverablePostalCodeMessage ? (
+            <Message className="undeliverable">
+              {formData.undeliverablePostalCodeMessage}
+            </Message>
+          ) : null}
           <SubmitButton disabled={!formData.isFormValid}>
             {!formData.isLoading ? t(translations.subscribe.form.submit) : null}
             {formData.isLoading ? <LoadingIndicator /> : null}
@@ -136,6 +169,22 @@ const Form = styled.div`
   justify-content: center;
   flex-direction: column;
   min-height: 320px;
+`;
+
+const Check = styled.div`
+  display: inline-block;
+  margin-left: 0.5rem;
+  color: green;
+`;
+
+const Message = styled.p`
+  margin-top: -1rem;
+  font-size: 0.8rem;
+  color: red;
+
+  &.undeliverable {
+    color: #d48806;
+  }
 `;
 
 const SubmitButton = styled(Button)`

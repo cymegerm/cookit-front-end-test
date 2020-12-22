@@ -3,6 +3,9 @@ export interface SubscribeForm {
   isEmailValid: boolean;
   isPostalCodeValid: boolean;
   isPostalCodeDeliverable: boolean;
+  invalidEmailMessage: string;
+  invalidPostalCodeMessage: string;
+  undeliverablePostalCodeMessage: string;
   email: string;
   postalCode: string;
   isLoading: boolean;
