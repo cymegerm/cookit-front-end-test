@@ -4,10 +4,10 @@ export const useNavigation = (baseRoute: String = '') => {
   const history = useHistory();
 
   const navigateTo = (route: String) => {
-    history.push(`${baseRoute}/${route}`)
-  }
+    history.push(`${baseRoute}/${route}`);
+  };
 
   return {
-    navigateTo
-  }
-}
+    navigateTo,
+  };
+};

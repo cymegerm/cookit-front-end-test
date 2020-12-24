@@ -38,13 +38,13 @@ interface SvgProps {
 
 const Svg = styled.svg<SvgProps>`
   animation: ${rotate} ${speed * 1.75}s linear infinite;
-  height: ${p => (p.small ? '1.25rem' : '3rem')};
-  width: ${p => (p.small ? '1.25rem' : '3rem')};
+  height: 1rem;
+  width: 1rem;
   transform-origin: center;
 `;
 
 const Circle = styled.circle`
   animation: ${dash} ${speed}s ease-in-out infinite;
-  stroke: ${p => p.theme.primary};
+  stroke: black;
   stroke-linecap: round;
 `;
